@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>All Candidates</title>
+
+<style>
+/* ===== GLOBAL ===== */
+body {
+    margin: 0;
+    font-family: "Inter", "Segoe UI", sans-serif;
+    background: #0f172a;
+    color: #e5e7eb;
+}
+
+.container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* ===== HEADER ===== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+h2 {
+    font-size: 30px;
+    color: #f8fafc;
+}
+
+.subtext {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.filter-bar a {
+    padding: 8px 16px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #c7d2fe;
+    background: rgba(255,255,255,0.06);
+    transition: all 0.25s ease;
+}
+
+.filter-bar a:hover {
+    background: rgba(99,102,241,0.25);
+    color: #fff;
+}
+
+.filter-bar a.active {
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+    color: white;
+    box-shadow: 0 6px 18px rgba(99,102,241,0.35);
+}
+
+/* ===== TABLE ===== */
+.table-wrap {
+    background: #020617;
+    border-radius: 18px;
+    padding: 18px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.45);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background: #020617;
+    text-align: left;
+    padding: 14px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #c7d2fe;
+    border-bottom: 1px solid #1e293b;
+}
+
+td {
+    padding: 16px 14px;
+    border-top: 1px solid #1e293b;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+tr:hover {
+    background: rgba(255,255,255,0.035);
+}
+
+/* ===== CANDIDATE CELL ===== */
+.candidate {
+    display: flex;
+    flex-direction: column;
+}
+
+.candidate strong {
+    font-size: 15px;
+    color: #f8fafc;
+}
+
+.candidate span {
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+/* ===== STATUS & ATS ===== */
+.status-pill {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.status-analyzed {
+    background: rgba(250,204,21,0.15);
+    color: #facc15;
+}
+
+.status-shortlisted {
+    background: rgba(34,197,94,0.15);
+    color: #22c55e;
+}
+
+.status-rejected {
+    background: rgba(239,68,68,0.15);
+    color: #ef4444;
+}
+
+.ats-badge {
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+}
+
+/* ===== BUTTON ===== */
+.action-btn {
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+    border: none;
+    padding: 9px 16px;
+    border-radius: 12px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(99,102,241,0.4);
+}
+
+/* ===== EMPTY STATE ===== */
+.empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+
+/* ===== PAGINATION ===== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.pagination a {
+    padding: 8px 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+    color: #c7d2fe;
+    background: rgba(255,255,255,0.05);
+    transition: all 0.25s ease;
+}
+
+.pagination a:hover {
+    background: rgba(99,102,241,0.25);
+    color: white;
+}
+
+.pagination a.active {
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+    color: white;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+    <div>
+        <h2>All Candidates</h2>
+        <div class="subtext">Review, filter and shortlist candidates using ATS</div>
+    </div>
+</div>
+
+<!-- ===== FILTERS ===== -->
+<div class="filter-bar">
+    <a href="?status=all" class="{{ 'active' if status=='all' else '' }}">All</a>
+    <a href="?status=analyzed" class="{{ 'active' if status=='analyzed' else '' }}">Analyzed</a>
+    <a href="?status=shortlisted" class="{{ 'active' if status=='shortlisted' else '' }}">Shortlisted</a>
+    <a href="?status=rejected" class="{{ 'active' if status=='rejected' else '' }}">Rejected</a>
+</div>
+
+<!-- ===== TABLE ===== -->
+<div class="table-wrap">
+
+{% if candidates and candidates|length > 0 %}
+
+<table>
+<tr>
+    <th>Candidate</th>
+    <th>Resume</th>
+    <th>ATS Score</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for c in candidates %}
+<tr>
+    <td>
+        <div class="candidate">
+            <strong>{{ c.candidate.name }}</strong>
+            <span>{{ c.candidate.email }}</span>
+        </div>
+    </td>
+    <td>{{ c.filename }}</td>
+    <td>
+        <span class="ats-badge">
+            {{ c.jd_ats_score or c.ats_score }}%
+        </span>
+    </td>
+    <td>
+        <span class="status-pill status-{{ c.status }}">
+            {{ c.status }}
+        </span>
+    </td>
+    <td>
+        <a href="/recruiter/analysis/{{ c._id }}">
+            <button class="action-btn">View Analysis</button>
+        </a>
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+{% else %}
+<div class="empty">
+    <h3>No candidates found</h3>
+    <p>Try adjusting filters or job criteria.</p>
+</div>
+{% endif %}
+
+</div>
+
+<!-- ===== PAGINATION ===== -->
+<div class="pagination">
+{% for p in range(1, pages+1) %}
+    <a href="?status={{ status }}&page={{ p }}"
+       class="{{ 'active' if page==p else '' }}">
+       {{ p }}
+    </a>
+{% endfor %}
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,136 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Resume Analysis{% endblock %}
+{% block heading %}Resume Analysis Report{% endblock %}
+
+{% block content %}
+
+{% if resume %}
+
+<!-- ================= SUMMARY ================= -->
+<div class="card">
+  <h3>{{ resume.filename }}</h3>
+  <div class="ats-score-card">
+    <div class="ats-label">ATS SCORE</div>
+    <div class="ats-value">{{ resume.ats_score }}%</div>
+    <div class="ats-subtext">
+        Applicant Tracking System Compatibility
+    </div>
+</div>
+
+  <h4>Summary</h4>
+  <p>
+    {{ resume.summary if resume.summary else "No summary available." }}
+  </p>
+</div>
+
+<!-- ================= PERSONAL DETAILS ================= -->
+<div class="card">
+  <h4>Personal Details</h4>
+
+  {% if resume.personal_details %}
+    <ul>
+      {% if resume.personal_details.name %}
+        <li><b>Name:</b> {{ resume.personal_details.name }}</li>
+      {% endif %}
+      {% if resume.personal_details.email %}
+        <li><b>Email:</b> {{ resume.personal_details.email }}</li>
+      {% endif %}
+      {% if resume.personal_details.phone %}
+        <li><b>Phone:</b> {{ resume.personal_details.phone }}</li>
+      {% endif %}
+      {% if resume.personal_details.location %}
+        <li><b>Location:</b> {{ resume.personal_details.location }}</li>
+      {% endif %}
+    </ul>
+  {% else %}
+    <p>No personal details found.</p>
+  {% endif %}
+</div>
+
+<!-- ================= SKILLS ================= -->
+<div class="card">
+  <h4>Skills</h4>
+
+  {% if resume.skills and resume.skills|length > 0 %}
+    <ul class="skill-list">
+      {% for skill in resume.skills %}
+        <li>{{ skill }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No skills detected.</p>
+  {% endif %}
+</div>
+
+<!-- ================= EXPERIENCE ================= -->
+<div class="card">
+  <h4>Experience</h4>
+
+  {% if resume.experience and resume.experience|length > 0 %}
+    <ul>
+      {% for e in resume.experience %}
+        <li>
+          <b>{{ e.title }}</b>
+          {% if e.company %} – {{ e.company }}{% endif %}
+          {% if e.duration %} ({{ e.duration }}){% endif %}
+          {% if e.description %}
+            <br><small>{{ e.description }}</small>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No experience found.</p>
+  {% endif %}
+</div>
+
+<!-- ================= PROJECTS ================= -->
+<div class="card">
+  <h4>Projects</h4>
+
+  {% if resume.projects %}
+    {% if resume.projects is string %}
+      <p>{{ resume.projects }}</p>
+    {% else %}
+      <ul>
+        {% for p in resume.projects %}
+          <li>{{ p }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% else %}
+    <p>No projects mentioned.</p>
+  {% endif %}
+</div>
+
+<!-- ================= ATS FEEDBACK ================= -->
+<div class="card">
+  <h4>ATS Evaluation</h4>
+
+  {% if resume.ats_feedback %}
+    {% if resume.ats_feedback.ats_score %}
+      <p><b>ATS Score:</b> {{ resume.ats_feedback.ats_score }}/100</p>
+    {% endif %}
+
+    <ul>
+      {% for f in resume.ats_feedback %}
+        <li>
+          <b>{{ f.priority }}:</b> {{ f.message }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No ATS feedback available.</p>
+  {% endif %}
+</div>
+
+{% else %}
+
+<div class="card">
+  <p>No analysis found for this resume.</p>
+</div>
+
+{% endif %}
+
+{% endblock %}

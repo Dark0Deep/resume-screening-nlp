@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- MAIN STYLES -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
+        <h2 class="logo">Resume Screening</h2>
+
+        <nav class="nav-links">
+
+            <!-- DASHBOARD -->
+            <a href="/candidate/dashboard"
+               class="nav-item {% if request.path == '/candidate/dashboard' %}active{% endif %}">
+                📊 <span>Dashboard</span>
+            </a>
+
+            <!-- UPLOAD -->
+            <a href="/candidate/upload"
+               class="nav-item {% if request.path == '/candidate/upload' %}active{% endif %}">
+                ⬆️ <span>Resume Upload</span>
+            </a>
+
+            <!-- ANALYSIS (SAFE + ALWAYS WORKING) -->
+            <a href="/candidate/analysis/latest"
+                class="nav-item {% if 'analysis' in request.path %}active{% endif %}">
+                📈 <span>Analysis</span>
+            </a>
+
+
+            <!-- SUGGESTIONS -->
+            <a href="/candidate/suggestions"
+               class="nav-item {% if request.path == '/candidate/suggestions' %}active{% endif %}">
+                💡 <span>Suggestions</span>
+            </a>
+
+            <!-- LOGOUT -->
+            <a href="/logout" class="nav-item logout">
+                🚪 <span>Logout</span>
+            </a>
+
+        </nav>
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <div class="main">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div>
+                <h1>{% block heading %}{% endblock %}</h1>
+            </div>
+
+            <div class="top-right">
+                <span class="time">Updated just now</span>
+            </div>
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <section class="content">
+            {% block content %}{% endblock %}
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>

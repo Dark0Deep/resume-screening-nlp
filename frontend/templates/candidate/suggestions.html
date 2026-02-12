@@ -1,0 +1,49 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Resume Suggestions{% endblock %}
+{% block heading %}AI Resume Improvement Suggestions{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+    <h3 style="margin-bottom:15px;">Your ATS Score</h3>
+
+    {% set score = resume.ats_score or 0 %}
+
+{% if score >= 75 %}
+    {% set score_class = "score-green" %}
+{% elif score >= 50 %}
+    {% set score_class = "score-yellow" %}
+{% else %}
+    {% set score_class = "score-red" %}
+{% endif %}
+
+<div class="ats-score {{ score_class }}">
+    {{ score }}%
+</div>
+
+
+    <h3 style="margin-bottom:15px;">Improvement Suggestions</h3>
+
+    {% if resume.ats_feedback %}
+        <ul style="list-style:none; padding:0;">
+            {% for s in resume.ats_feedback %}
+            <li style="
+                background: rgba(255,255,255,0.05);
+                padding: 12px 15px;
+                border-radius: 10px;
+                margin-bottom: 10px;
+                border-left: 4px solid #6366f1;
+            ">
+                🔹 {{ s }}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No suggestions available.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

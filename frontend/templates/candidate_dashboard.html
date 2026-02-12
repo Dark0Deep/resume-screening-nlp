@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Candidate Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css?v=2">
+
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ================= HEADER ================= -->
+    <h2>Welcome, {{ session.get("name", "Candidate") }}</h2>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="alert success">
+            {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- ================= ACTION CARDS ================= -->
+    <div class="metrics">
+
+        <!-- Upload Resume -->
+        <div class="card">
+            <h3>Resume Upload</h3>
+            <p class="text-muted">Upload your latest resume for analysis</p>
+
+            <form method="POST" action="/upload-resume" enctype="multipart/form-data">
+                <input type="file" name="resume" required>
+                <br><br>
+                <button type="submit">Upload Resume</button>
+            </form>
+        </div>
+
+        <!-- Analyze Resume -->
+        <div class="card">
+            <h3>Resume Analysis</h3>
+            <p class="text-muted">Run ATS-style analysis on your resume</p>
+
+            <form method="POST" action="/analyze-resume">
+                <button type="submit">Analyze Resume</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- ================= ANALYSIS RESULT ================= -->
+    {% if session.get("analysis") %}
+    <div class="card">
+
+        <h3>Resume Analysis Report</h3>
+
+        <hr>
+
+        <p>
+            <strong>File Name:</strong>
+            {{ session.analysis.filename }}
+        </p>
+
+        <!-- Summary -->
+        <h3>Professional Summary</h3>
+        <p style="color:#cbd5f5;">
+            {{ session.analysis.summary }}
+        </p>
+
+        <!-- Skills -->
+        <h3>Detected Skills</h3>
+        {% if session.analysis.skills %}
+            <ul>
+                {% for skill in session.analysis.skills %}
+                    <li>{{ skill }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="yellow">No relevant technical skills detected.</p>
+        {% endif %}
+
+        <!-- Suggestions -->
+        <h3>Improvement Suggestions</h3>
+        {% if session.analysis.suggestions %}
+            <ul>
+                {% for s in session.analysis.suggestions %}
+                    <li>{{ s }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="green">Your resume looks well structured.</p>
+        {% endif %}
+
+    </div>
+    {% endif %}
+
+    <!-- ================= FOOTER ================= -->
+    <hr>
+    <a href="/logout">Logout</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Upload Resume{% endblock %}
+{% block heading %}Resume Analyzer{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h3>📤 Upload Your Resume</h3>
+    <p>Supported formats: PDF, DOCX</p>
+
+    <form method="POST" action="/upload-resume" enctype="multipart/form-data">
+        <input type="file" name="resume" required>
+        <br><br>
+        <button class="primary">Upload Resume</button>
+    </form>
+</div>
+{% endblock %}
