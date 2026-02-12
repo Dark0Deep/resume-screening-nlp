@@ -5,12 +5,12 @@ from datetime import datetime
 import os
 
 # ================= NLP =================
-from nlp.resume_parser import parse_resume
-from nlp.skill_extractor import extract_skills_from_sections
-from nlp.matcher import calculate_ats_score
-from nlp.feedback_engine import generate_ats_feedback
-from nlp.matcher import calculate_simple_ats
-from nlp.matcher import calculate_ats_score
+from backend.nlp.resume_parser import parse_resume
+from backend.nlp.skill_extractor import extract_skills_from_sections
+from backend.nlp.matcher import calculate_ats_score
+from backend.nlp.feedback_engine import generate_ats_feedback
+from backend.nlp.matcher import calculate_simple_ats
+from backend.nlp.matcher import calculate_ats_score
 
 # ================= DB =================
 from db import users_collection, resumes_collection
