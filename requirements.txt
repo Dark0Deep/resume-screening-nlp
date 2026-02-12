@@ -3,3 +3,5 @@ gunicorn
 pymongo
 dnspython
 werkzeug
+numpy
+scikit-learn
