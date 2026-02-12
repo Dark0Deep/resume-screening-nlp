@@ -1,7 +1,8 @@
-Flask
+flask
 gunicorn
 pymongo
-dnspython
-werkzeug
-numpy
 scikit-learn
+spacy
+phonenumbers
+python-docx
+PyPDF2
