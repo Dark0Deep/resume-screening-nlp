@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Resume Screening SaaS</title>
+<title>SmartHire AI | Modern Hiring Intelligence Platform</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
   --bg:#0f172a;
+  --card:#111827;
   --primary:#6366f1;
   --secondary:#3b82f6;
+  --accent:#22d3ee;
   --text:#e5e7eb;
   --muted:#94a3b8;
 }
@@ -22,8 +24,39 @@
 
 body{
   margin:0;
-  background:linear-gradient(135deg,#0f172a,#1e293b);
+  background:var(--bg);
   color:var(--text);
+  overflow-x:hidden;
+}
+
+/* Floating gradient blobs */
+.blob{
+  position:absolute;
+  border-radius:50%;
+  filter:blur(120px);
+  opacity:.5;
+  animation:float 10s ease-in-out infinite alternate;
+}
+
+.blob1{
+  width:400px;
+  height:400px;
+  background:#6366f1;
+  top:-100px;
+  left:-100px;
+}
+
+.blob2{
+  width:350px;
+  height:350px;
+  background:#22d3ee;
+  bottom:-120px;
+  right:-120px;
+}
+
+@keyframes float{
+  from{transform:translateY(0px)}
+  to{transform:translateY(40px)}
 }
 
 /* Navbar */
@@ -31,119 +64,165 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:20px 60px;
+  padding:25px 60px;
+  position:relative;
+  z-index:2;
 }
 
 .logo{
-  font-size:20px;
-  font-weight:700;
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:.5px;
 }
 
 .nav-buttons a{
-  margin-left:15px;
   text-decoration:none;
+  margin-left:15px;
 }
 
 .btn{
   padding:10px 18px;
-  border-radius:10px;
+  border-radius:12px;
   font-weight:600;
   transition:.3s;
 }
 
 .btn-outline{
-  border:1px solid #6366f1;
-  color:#6366f1;
+  border:1px solid var(--primary);
+  color:var(--primary);
 }
 
 .btn-primary{
-  background:linear-gradient(135deg,#6366f1,#3b82f6);
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
   color:white;
 }
 
 .btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 10px 30px rgba(99,102,241,.4);
+  box-shadow:0 15px 30px rgba(99,102,241,.4);
 }
 
-/* Hero */
+/* HERO */
 .hero{
   text-align:center;
-  padding:100px 20px;
+  padding:120px 20px 80px;
+  position:relative;
+  z-index:2;
 }
 
 .hero h1{
-  font-size:48px;
-  margin-bottom:20px;
+  font-size:56px;
+  font-weight:800;
+  line-height:1.1;
+  max-width:900px;
+  margin:auto;
+  animation:fadeInUp 1s ease;
+}
+
+.hero span{
+  background:linear-gradient(135deg,#6366f1,#22d3ee);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 .hero p{
+  margin-top:25px;
   font-size:18px;
   color:var(--muted);
-  max-width:700px;
-  margin:auto;
-  margin-bottom:40px;
+  max-width:750px;
+  margin-left:auto;
+  margin-right:auto;
+  animation:fadeInUp 1.3s ease;
+}
+
+.hero-buttons{
+  margin-top:40px;
+  animation:fadeInUp 1.6s ease;
 }
 
 .hero-buttons a{
   margin:0 10px;
 }
 
-/* Features */
+/* FEATURES */
 .features{
+  padding:100px 60px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:30px;
-  padding:80px 60px;
+  position:relative;
+  z-index:2;
 }
 
 .feature-card{
   background:rgba(255,255,255,.05);
-  padding:30px;
-  border-radius:20px;
   backdrop-filter:blur(20px);
+  border-radius:20px;
+  padding:30px;
   transition:.3s;
+  border:1px solid rgba(255,255,255,.08);
 }
 
 .feature-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
+  transform:translateY(-8px);
+  box-shadow:0 25px 50px rgba(0,0,0,.5);
 }
 
 .feature-card h3{
   margin-bottom:15px;
+  font-weight:700;
+}
+
+.feature-card p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+/* Animations */
+@keyframes fadeInUp{
+  from{opacity:0; transform:translateY(40px);}
+  to{opacity:1; transform:translateY(0);}
 }
 
 .footer{
   text-align:center;
-  padding:40px;
-  color:var(--muted);
+  padding:60px 20px;
   font-size:14px;
+  color:var(--muted);
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+
+<!-- NAV -->
 <div class="navbar">
-  <div class="logo">🚀 Resume Screening</div>
+  <div class="logo">SmartHire AI</div>
   <div class="nav-buttons">
     <a href="/login" class="btn btn-outline">Login</a>
-    <a href="/register" class="btn btn-primary">Get Started</a>
+    <a href="/register" class="btn btn-primary">Start Hiring</a>
   </div>
 </div>
 
 <!-- HERO -->
 <section class="hero">
-  <h1>AI-Powered Resume Screening Platform</h1>
+  <h1>
+    The Future of <span>Intelligent Hiring</span>  
+    Starts Here
+  </h1>
+
   <p>
-    A startup-level intelligent ATS system that analyzes resumes,
-    matches candidates with job descriptions, and streamlines hiring decisions.
+    A modern AI-powered hiring intelligence platform built for startups,
+    recruiters, and scaling teams.  
+    Analyze resumes, rank candidates, and manage applications —
+    all in one secure system.
   </p>
 
   <div class="hero-buttons">
-    <a href="/register" class="btn btn-primary">Start Free</a>
+    <a href="/register" class="btn btn-primary">Create Recruiter Account</a>
     <a href="/login" class="btn btn-outline">Login</a>
   </div>
 </section>
@@ -152,38 +231,37 @@ body{
 <section class="features">
 
   <div class="feature-card">
-    <h3>⚡ Smart ATS Matching</h3>
+    <h3>🧠 AI Resume Intelligence</h3>
     <p>
-      Automatically calculate ATS score and match resumes with job requirements using NLP.
+      Automatically extract skills, experience, education, and calculate ATS scores with NLP precision.
     </p>
   </div>
 
   <div class="feature-card">
-    <h3>🔒 Secure Multi-Tenant Architecture</h3>
+    <h3>🎯 Job-Based Application Architecture</h3>
     <p>
-      Recruiters only see applications submitted to their jobs.
-      Full application-based architecture.
+      Recruiters only see candidates who apply to their jobs — secure, scalable, startup-ready structure.
     </p>
   </div>
 
   <div class="feature-card">
-    <h3>📊 Recruiter Dashboard</h3>
+    <h3>📊 Real-Time Hiring Dashboard</h3>
     <p>
-      Manage job posts, review applicants, shortlist or reject candidates in one place.
+      Track applicants, shortlist, reject, and manage hiring decisions with clarity.
     </p>
   </div>
 
   <div class="feature-card">
-    <h3>🎯 Candidate Insights</h3>
+    <h3>🔒 Multi-Tenant Secure System</h3>
     <p>
-      Candidates receive ATS feedback, skill insights, and real-time application status.
+      Built with production-grade data isolation ensuring recruiter-level privacy.
     </p>
   </div>
 
 </section>
 
 <div class="footer">
-  © 2026 Resume Screening SaaS • Built with Flask + MongoDB + NLP
+  © 2026 SmartHire AI • Built with Flask, MongoDB & AI
 </div>
 
 </body>
