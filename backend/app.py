@@ -10,7 +10,6 @@ from backend.nlp.skill_extractor import extract_skills_from_sections
 from backend.nlp.matcher import calculate_ats_score
 from backend.nlp.feedback_engine import generate_ats_feedback
 from backend.nlp.matcher import calculate_simple_ats
-from backend.nlp.matcher import calculate_ats_score
 
 # ================= DB =================
 from backend.db import users_collection, resumes_collection, jobs_collection, applications_collection
@@ -296,6 +295,62 @@ def view_recruiter_jobs(recruiter_id):
         jobs=jobs
     )
 
+# ======================================================
+# CANDIDATE → APPLY TO JOB
+# ======================================================
+
+@app.route("/candidate/apply/<job_id>", methods=["GET", "POST"])
+def apply_to_job(job_id):
+
+    if session.get("role") != "Candidate":
+        return redirect("/login")
+
+    candidate_id = session.get("user_id")
+
+    job = jobs_collection.find_one({"_id": ObjectId(job_id)})
+
+    if not job:
+        flash("Job not found")
+        return redirect("/candidate/recruiters")
+
+    resumes = list(
+        resumes_collection.find({
+            "uploaded_by": candidate_id,
+            "status": "analyzed"
+        })
+    )
+
+    if request.method == "POST":
+
+        resume_id = request.form.get("resume_id")
+
+        # Prevent duplicate application
+        existing = applications_collection.find_one({
+            "job_id": job_id,
+            "candidate_id": candidate_id
+        })
+
+        if existing:
+            flash("You have already applied to this job")
+            return redirect(request.referrer)
+
+        applications_collection.insert_one({
+            "job_id": job_id,
+            "candidate_id": candidate_id,
+            "resume_id": resume_id,
+            "status": "pending",
+            "match_score": 0,
+            "applied_at": datetime.utcnow()
+        })
+
+        flash("Application submitted successfully")
+        return redirect("/candidate/dashboard")
+
+    return render_template(
+        "candidate/apply_job.html",
+        job=job,
+        resumes=resumes
+    )
 
 # ======================================================
 # RECRUITER SIDE (FINAL & STABLE)
@@ -442,204 +497,6 @@ def create_job():
         return redirect("/recruiter/jobs")
 
     return render_template("recruiter/create_job.html")
-
-@app.route("/recruiter/candidates")
-def recruiter_candidates():
-    if session.get("role") != "Recruiter":
-        return redirect("/login")
-
-    status = request.args.get("status", "all")
-    page = int(request.args.get("page", 1))
-    limit = 5
-    skip = (page - 1) * limit
-
-    query = {}
-    if status != "all":
-        query["status"] = status
-
-    total = resumes_collection.count_documents(query)
-
-    pipeline = [
-        {"$match": query},
-        {"$addFields": {"user_obj": {"$toObjectId": "$uploaded_by"}}},
-        {"$lookup": {
-            "from": "users",
-            "localField": "user_obj",
-            "foreignField": "_id",
-            "as": "candidate"
-        }},
-        {"$unwind": "$candidate"},
-        {"$skip": skip},
-        {"$limit": limit}
-    ]
-
-    candidates = list(resumes_collection.aggregate(pipeline))
-    pages = (total + limit - 1) // limit
-
-    return render_template(
-        "recruiter/recruiter_candidates.html",
-        candidates=candidates,
-        page=page,
-        pages=pages,
-        status=status
-    )
-
-@app.route("/analyze-job", methods=["POST"])
-def analyze_job():
-    if session.get("role") != "Recruiter":
-        return redirect("/login")
-
-    job_description = request.form.get("job_description")
-
-    ranked = []
-
-    for r in resumes_collection.find({"status": "analyzed"}):
-        ats = calculate_ats_score(
-            resume_text=r.get("raw_text", ""),
-            job_description=job_description,
-            resume_skills=r.get("skills_meta", []),
-            sections={
-                "experience": r.get("experience", ""),
-                "projects": r.get("projects", ""),
-                "certifications": r.get("certifications", "")
-            },
-            required_skills=[]
-        )
-
-        resumes_collection.update_one(
-            {"_id": r["_id"]},
-            {"$set": ats}
-        )
-
-        ranked.append({
-            "id": str(r["_id"]),
-            "filename": r["filename"],
-            "ats_score": ats["ats_score"],
-            "status": r.get("status", "analyzed")
-        })
-
-    ranked.sort(key=lambda x: x["ats_score"], reverse=True)
-    session["ranked_candidates"] = ranked
-
-    flash("✅ Candidates ranked successfully")
-    return redirect("/recruiter-dashboard")
-
-@app.route("/recruiter/filter-candidates", methods=["POST"])
-def recruiter_filter_candidates():
-    if session.get("role") != "Recruiter":
-        return redirect("/login")
-
-    degree = request.form.get("degree", "").lower()
-    skills = [s.strip().lower() for s in request.form.get("skills", "").split(",") if s.strip()]
-    min_ats = int(request.form.get("min_ats", 0))
-    job_description = request.form.get("job_description", "")
-
-    shortlisted_count = 0
-
-    resumes = resumes_collection.find({"status": "analyzed"})
-
-    for r in resumes:
-
-    # ---------- DEGREE MATCH (SMART) ----------
-        edu_text = str(r.get("education", "")).lower()
-
-        degree_keywords = {
-        "b.tech": ["b.tech", "bachelor of technology", "bachelor"],
-        "m.tech": ["m.tech", "master of technology", "master"],
-        "mba": ["mba", "master of business"],
-        "mca": ["mca", "master of computer"]
-    }
-
-        if degree:
-            allowed = degree_keywords.get(degree, [degree])
-            if not any(k in edu_text for k in allowed):
-                continue
-
-
-    # ---------- SKILL MATCH (PARTIAL OK) ----------
-        resume_skills = [s.lower() for s in r.get("skills", [])]
-
-        matched_skills = [s for s in skills if s in resume_skills]
-        if skills and len(matched_skills) == 0:
-            continue
-
-
-    # ---------- ATS SCORE ----------
-        ats_score = r.get("ats_score", 0)
-        if ats_score < min_ats:
-            continue
-
-
-    # ---------- AUTO SHORTLIST ----------
-        resumes_collection.update_one(
-            {"_id": r["_id"]},
-            {"$set": {"status": "shortlisted"}}
-        )
-
-        shortlisted_count += 1
-
-
-    if shortlisted_count == 0:
-        flash("⚠️ No candidates matched the given criteria")
-    else:
-        flash(f"✅ {shortlisted_count} candidates shortlisted using ATS + JD")
-
-    return redirect("/recruiter-dashboard")
-
-@app.route("/recruiter/analysis/<resume_id>")
-def recruiter_analysis(resume_id):
-    if session.get("role") != "Recruiter":
-        return redirect("/login")
-
-    resume = resumes_collection.find_one({"_id": ObjectId(resume_id)})
-
-    if not resume:
-        flash("Resume not found")
-        return redirect("/recruiter-dashboard")
-
-    return render_template(
-        "recruiter/analysis.html",
-        resume=resume
-    )
-
-
-@app.route("/update-status", methods=["POST"])
-def update_status():
-    if session.get("role") != "Recruiter":
-        return redirect("/login")
-
-    resume_id = request.form.get("resume_id")
-    status = request.form.get("status")
-
-    resumes_collection.update_one(
-        {"_id": ObjectId(resume_id)},
-        {"$set": {"status": status}}
-    )
-
-    flash("✅ Candidate status updated")
-    return redirect("/recruiter-dashboard")
-
-
-@app.route("/export-csv")
-def export_csv():
-    if session.get("role") != "Recruiter":
-        return redirect("/login")
-
-    data = session.get("ranked_candidates", [])
-    if not data:
-        flash("Nothing to export")
-        return redirect("/recruiter-dashboard")
-
-    def generate():
-        yield "Resume,ATS Score,Status\n"
-        for c in data:
-            yield f"{c['filename']},{c['ats_score']},{c['status']}\n"
-
-    return Response(
-        generate(),
-        mimetype="text/csv",
-        headers={"Content-Disposition": "attachment; filename=ranked_candidates.csv"}
-    )
 
 import os
 
