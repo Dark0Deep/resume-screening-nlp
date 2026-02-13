@@ -27,6 +27,21 @@
 
         {% for app in applications %}
         <tr>
+            <p><strong>ATS Score:</strong> {{ app.ats_score }}%</p>
+
+<p><strong>Skills:</strong>
+  {% if app.skills %}
+    {{ app.skills | join(', ') }}
+  {% else %}
+    —
+  {% endif %}
+</p>
+
+<p><strong>Summary:</strong>
+  {{ app.summary }}
+</p>
+
+
             <td>
                 {{ app.candidate_name }} <br>
                 <small>{{ app.candidate_email }}</small>

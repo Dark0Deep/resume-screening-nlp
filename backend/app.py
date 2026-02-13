@@ -427,18 +427,21 @@ def recruiter_job_applicants(job_id):
             })
 
             resume = resumes_collection.find_one({
-                "_id": ObjectId(app_doc.get("resume_id"))
-            })
+                "_id": ObjectId(app_doc["resume_id"])
+        })
 
             enriched_apps.append({
                 "application_id": str(app_doc["_id"]),
                 "candidate_name": candidate.get("name") if candidate else "Unknown",
                 "candidate_email": candidate.get("email") if candidate else "",
                 "resume_filename": resume.get("filename") if resume else "",
-                "match_score": app_doc.get("match_score", 0),
+                "ats_score": resume.get("ats_score", 0) if resume else 0,
+                "summary": resume.get("summary", "") if resume else "",
+                "skills": resume.get("skills", []) if resume else [],
                 "status": app_doc.get("status", "pending"),
                 "applied_at": app_doc.get("applied_at")
             })
+
         except:
             continue
 
