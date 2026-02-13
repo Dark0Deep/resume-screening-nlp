@@ -300,51 +300,54 @@ def view_recruiter_jobs(recruiter_id):
 # ======================================================
 
 @app.route("/candidate/apply/<job_id>", methods=["GET", "POST"])
-def apply_to_job(job_id):
+def candidate_apply(job_id):
 
     if session.get("role") != "Candidate":
         return redirect("/login")
 
     candidate_id = session.get("user_id")
 
+    # 1️⃣ Get Job
     job = jobs_collection.find_one({"_id": ObjectId(job_id)})
-
     if not job:
         flash("Job not found")
         return redirect("/candidate/recruiters")
 
+    # 2️⃣ Get Candidate Resumes
     resumes = list(
-        resumes_collection.find({
-            "uploaded_by": candidate_id,
-            "status": "analyzed"
-        })
+        resumes_collection.find({"uploaded_by": candidate_id})
+        .sort("uploaded_at", -1)
     )
 
     if request.method == "POST":
-
         resume_id = request.form.get("resume_id")
 
-        # Prevent duplicate application
+        if not resume_id:
+            flash("Please select a resume")
+            return redirect(request.url)
+
+        # 3️⃣ Prevent duplicate apply
         existing = applications_collection.find_one({
             "job_id": job_id,
             "candidate_id": candidate_id
         })
 
         if existing:
-            flash("You have already applied to this job")
-            return redirect(request.referrer)
+            flash("You already applied to this job")
+            return redirect(request.url)
 
+        # 4️⃣ Insert Application
         applications_collection.insert_one({
             "job_id": job_id,
             "candidate_id": candidate_id,
             "resume_id": resume_id,
-            "status": "pending",
             "match_score": 0,
+            "status": "pending",
             "applied_at": datetime.utcnow()
         })
 
         flash("Application submitted successfully")
-        return redirect("/candidate/dashboard")
+        return redirect(f"/candidate/recruiter/{job['created_by']}")
 
     return render_template(
         "candidate/apply_job.html",

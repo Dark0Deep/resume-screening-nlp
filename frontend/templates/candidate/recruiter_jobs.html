@@ -1,24 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>{{ recruiter.name }} Jobs</title>
-</head>
-<body>
+{% extends "layouts/base.html" %}
 
-<h2>Jobs posted by {{ recruiter.name }}</h2>
+{% block title %}{{ recruiter.name }} Jobs{% endblock %}
+{% block heading %}Jobs posted by {{ recruiter.name }}{% endblock %}
 
-{% if jobs %}
-  {% for job in jobs %}
-    <div style="margin-bottom:20px; border:1px solid #ccc; padding:10px;">
-      <h3>{{ job.title }}</h3>
-      <p>{{ job.description }}</p>
-    </div>
-  {% endfor %}
-{% else %}
-  <p>No jobs posted yet.</p>
-{% endif %}
+{% block content %}
 
-<a href="/candidate/recruiters">Back</a>
+<div class="card">
 
-</body>
-</html>
+  {% if jobs and jobs|length > 0 %}
+
+    {% for job in jobs %}
+      <div style="margin-bottom:25px; padding:20px; border-radius:12px; background:#111827;">
+
+        <h3 style="margin-top:0;">{{ job.title }}</h3>
+
+        <p style="color:#9ca3af;">
+          {{ job.description }}
+        </p>
+
+        <div style="margin-top:15px;">
+          <a href="/candidate/apply/{{ job._id }}">
+            <button class="btn">
+              🚀 Apply Now
+            </button>
+          </a>
+        </div>
+
+      </div>
+    {% endfor %}
+
+  {% else %}
+    <p>No jobs posted yet.</p>
+  {% endif %}
+
+  <div style="margin-top:20px;">
+    <a href="/candidate/recruiters" class="btn">⬅ Back</a>
+  </div>
+
+</div>
+
+{% endblock %}

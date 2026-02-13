@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Apply to Job{% endblock %}
+{% block heading %}Apply to {{ job.title }}{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+  <h3>Select Resume</h3>
+
+  {% if resumes and resumes|length > 0 %}
+
+  <form method="POST">
+
+    <div style="margin-bottom:20px;">
+      <select name="resume_id" required style="padding:10px; width:100%; border-radius:8px;">
+        <option value="">-- Select Resume --</option>
+        {% for r in resumes %}
+        <option value="{{ r._id }}">{{ r.filename }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="btn">
+      🚀 Apply Now
+    </button>
+
+  </form>
+
+  {% else %}
+    <p>No resumes found. Please upload a resume first.</p>
+  {% endif %}
+
+</div>
+
+{% endblock %}
