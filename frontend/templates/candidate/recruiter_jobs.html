@@ -26,6 +26,19 @@
             </button>
           </a>
         </div>
+        {% if job.application_status %}
+  <p>
+    <strong>Status:</strong>
+    {% if job.application_status == "shortlisted" %}
+        <span style="color:green;">🎉 Shortlisted</span>
+    {% elif job.application_status == "rejected" %}
+        <span style="color:red;">❌ Rejected</span>
+    {% else %}
+        <span style="color:orange;">⏳ Pending</span>
+    {% endif %}
+  </p>
+{% endif %}
+
 
       </div>
     {% endfor %}

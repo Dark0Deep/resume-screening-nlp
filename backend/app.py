@@ -295,16 +295,31 @@ def view_recruiter_jobs(recruiter_id):
         flash("Recruiter not found")
         return redirect("/candidate/recruiters")
 
+    candidate_id = session.get("user_id")
+
     jobs = list(
         jobs_collection.find({"created_by": recruiter_id})
         .sort("created_at", -1)
     )
+
+    # 🔥 Attach application status for each job
+    for job in jobs:
+        application = applications_collection.find_one({
+            "job_id": str(job["_id"]),
+            "candidate_id": candidate_id
+        })
+
+        if application:
+            job["application_status"] = application.get("status", "pending")
+        else:
+            job["application_status"] = None
 
     return render_template(
         "candidate/recruiter_jobs.html",
         recruiter=recruiter,
         jobs=jobs
     )
+
 
 # ======================================================
 # CANDIDATE → APPLY TO JOB
@@ -466,9 +481,8 @@ def update_application_status():
         {"$set": {"status": status}}
     )
 
-    flash("Application status updated")
+    flash("Application status updated successfully")
     return redirect(request.referrer)
-
 
 # ======================================================
 # RECRUITER JOB MANAGEMENT (PHASE 2)
