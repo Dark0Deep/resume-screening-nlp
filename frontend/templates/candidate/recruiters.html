@@ -1,21 +1,86 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>Browse Recruiters</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-<h2>Available Recruiters</h2>
+{% block title %}Browse Recruiters{% endblock %}
+{% block heading %}Available Recruiters{% endblock %}
 
-{% for r in recruiters %}
-  <div style="margin-bottom:15px;">
-    <a href="/candidate/recruiter/{{ r._id }}">
-      {{ r.name }}
-    </a>
-  </div>
-{% endfor %}
+{% block content %}
 
-<a href="/candidate/dashboard">Back</a>
+<style>
+.recruiter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
 
-</body>
-</html>
+.recruiter-card {
+    background: linear-gradient(145deg,#111827,#1f2937);
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.4);
+    border: 1px solid #1e293b;
+    transition: .25s;
+}
+
+.recruiter-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 50px rgba(99,102,241,.3);
+}
+
+.recruiter-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.view-btn {
+    margin-top: 15px;
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 10px;
+    background: linear-gradient(135deg,#6366f1,#3b82f6);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.empty-box {
+    background: #111827;
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    border: 1px solid #1e293b;
+}
+</style>
+
+{% if recruiters and recruiters|length > 0 %}
+
+<div class="recruiter-grid">
+
+    {% for recruiter in recruiters %}
+    <div class="recruiter-card">
+        <div class="recruiter-name">
+            {{ recruiter.name }}
+        </div>
+
+        <div style="color:#9ca3af; font-size:13px;">
+            {{ recruiter.email }}
+        </div>
+
+        <a href="/candidate/recruiter/{{ recruiter._id }}" class="view-btn">
+            View Jobs
+        </a>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<div class="empty-box">
+    🚀 No recruiters available yet.
+</div>
+
+{% endif %}
+
+{% endblock %}
