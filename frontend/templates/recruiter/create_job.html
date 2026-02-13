@@ -1,47 +1,71 @@
-{% extends "base.html" %}
-
-{% block content %}
-
-<div class="container">
-    <h2>Create New Job</h2>
-
-    <form method="POST" class="job-form">
-        <input type="text" name="title"
-               placeholder="Job Title" required>
-
-        <textarea name="description"
-                  placeholder="Job Description"
-                  rows="6" required></textarea>
-
-        <button type="submit">Create Job</button>
-    </form>
-</div>
-
+<!DOCTYPE html>
+<html>
+<head>
+<title>Create Job</title>
 <style>
-.container {
-    max-width: 700px;
-    margin: 40px auto;
+body{
+  background:#0f172a;
+  font-family:Inter,Segoe UI;
+  color:white;
+  display:flex;
+  justify-content:center;
+  padding-top:60px;
 }
 
-.job-form input,
-.job-form textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 8px;
-    color: white;
+.card{
+  background:#020617;
+  width:500px;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
 }
 
-button {
-    padding: 10px 16px;
-    background: linear-gradient(135deg, #6366f1, #3b82f6);
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:8px;
+  margin-bottom:18px;
+  background:#0f172a;
+  border:1px solid #1e293b;
+  color:white;
+  border-radius:10px;
+}
+
+button{
+  background:linear-gradient(135deg,#6366f1,#3b82f6);
+  border:none;
+  padding:12px;
+  border-radius:12px;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  width:100%;
 }
 </style>
+</head>
 
-{% endblock %}
+<body>
+<div class="card">
+<h2>Create New Job</h2>
+
+<form method="POST">
+
+<label>Job Title</label>
+<input type="text" name="title" required>
+
+<label>Required Degree</label>
+<input type="text" name="degree" placeholder="B.Tech, MCA">
+
+<label>Required Skills (comma separated)</label>
+<input type="text" name="skills" placeholder="python, flask, sql">
+
+<label>Job Description</label>
+<textarea name="description" rows="5"></textarea>
+
+<button>Create Job</button>
+
+</form>
+
+</div>
+</body>
+</html>

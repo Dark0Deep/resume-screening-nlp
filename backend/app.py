@@ -315,10 +315,14 @@ def create_job():
     if request.method == "POST":
         title = request.form.get("title")
         description = request.form.get("description")
+        required_skills = request.form.get("skills")
+        degree = request.form.get("degree")
 
         jobs_collection.insert_one({
             "title": title,
             "description": description,
+            "required_skills": [s.strip().lower() for s in required_skills.split(",") if s.strip()],
+            "degree": degree.lower(),
             "created_by": session.get("user_id"),
             "created_at": datetime.utcnow()
         })
@@ -327,7 +331,6 @@ def create_job():
         return redirect("/recruiter/jobs")
 
     return render_template("recruiter/create_job.html")
-
 
 @app.route("/recruiter/candidates")
 def recruiter_candidates():
