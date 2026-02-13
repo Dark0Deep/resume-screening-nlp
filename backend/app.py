@@ -387,16 +387,17 @@ def candidate_apply(job_id):
 
 @app.route("/recruiter-dashboard")
 def recruiter_dashboard():
-
     if session.get("role") != "Recruiter":
         return redirect("/login")
 
     recruiter_id = session.get("user_id")
 
-    # Get all jobs created by recruiter
-    jobs = list(jobs_collection.find({"created_by": recruiter_id}))
+    # Get recruiter jobs
+    recruiter_jobs = list(
+        jobs_collection.find({"created_by": recruiter_id})
+    )
 
-    job_ids = [str(job["_id"]) for job in jobs]
+    job_ids = [str(job["_id"]) for job in recruiter_jobs]
 
     total = applications_collection.count_documents({
         "job_id": {"$in": job_ids}
@@ -422,9 +423,8 @@ def recruiter_dashboard():
         total=total,
         shortlisted=shortlisted,
         rejected=rejected,
-        analyzed=pending   # reuse variable for UI
+        pending=pending
     )
-
 
 # ======================================================
 # RECRUITER → VIEW JOB APPLICANTS (SECURE)
@@ -499,12 +499,27 @@ def update_application_status():
     application_id = request.form.get("application_id")
     status = request.form.get("status")
 
+    app_doc = applications_collection.find_one({
+        "_id": ObjectId(application_id)
+    })
+
+    if not app_doc:
+        flash("Application not found")
+        return redirect("/recruiter-dashboard")
+
+    # 1️⃣ Update application status
     applications_collection.update_one(
         {"_id": ObjectId(application_id)},
         {"$set": {"status": status}}
     )
 
-    flash("Application status updated successfully")
+    # 2️⃣ ALSO update resume status (so dashboard counts work)
+    resumes_collection.update_one(
+        {"_id": ObjectId(app_doc["resume_id"])},
+        {"$set": {"status": status}}
+    )
+
+    flash(f"Candidate {status.capitalize()} successfully")
 
     return redirect(request.referrer)
 

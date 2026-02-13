@@ -44,7 +44,9 @@
 
             <!-- ATS -->
             <td>
-                <strong>{{ app.ats_score if app.ats_score else app.match_score }}%</strong>
+                <strong>
+                    {{ app.ats_score if app.ats_score is defined else app.match_score }}%
+                </strong>
             </td>
 
             <!-- Skills -->
@@ -74,7 +76,7 @@
                 <form method="POST" action="/recruiter/update-application-status">
                     <input type="hidden" name="application_id" value="{{ app.application_id }}">
                     <input type="hidden" name="status" value="shortlisted">
-                    <button class="btn">Shortlist</button>
+                    <button type="submit" class="btn">Shortlist</button>
                 </form>
                 {% endif %}
 
@@ -82,7 +84,7 @@
                 <form method="POST" action="/recruiter/update-application-status">
                     <input type="hidden" name="application_id" value="{{ app.application_id }}">
                     <input type="hidden" name="status" value="rejected">
-                    <button class="btn" style="background:#ef4444;">Reject</button>
+                    <button type="submit" class="btn" style="background:#ef4444;">Reject</button>
                 </form>
                 {% endif %}
 

@@ -45,7 +45,6 @@ h2{
   margin-bottom:25px;
 }
 
-/* FLASH */
 .flash{
   background:rgba(99,102,241,.15);
   border:1px solid var(--primary);
@@ -55,7 +54,6 @@ h2{
   font-weight:500;
 }
 
-/* METRICS */
 .metrics{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
@@ -86,7 +84,6 @@ h2{
 .red{color:var(--red)}
 .yellow{color:var(--yellow)}
 
-/* BUTTON */
 .btn{
   background:linear-gradient(135deg,var(--primary),var(--secondary));
   border:none;
@@ -102,67 +99,6 @@ h2{
   transform:translateY(-2px);
   box-shadow:0 12px 30px rgba(99,102,241,.4);
 }
-
-/* JOB CRITERIA */
-.form-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:18px;
-}
-
-label{
-  font-size:13px;
-  color:var(--muted);
-  display:block;
-  margin-bottom:6px;
-}
-
-input,textarea{
-  width:100%;
-  background:#020617;
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:12px 14px;
-  color:var(--text);
-}
-
-textarea{resize:none}
-
-/* TABLE */
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-
-th,td{
-  padding:14px;
-  border-bottom:1px solid var(--border);
-  font-size:14px;
-}
-
-th{
-  color:#c7d2fe;
-  text-transform:uppercase;
-  font-size:12px;
-}
-
-tr:hover{
-  background:rgba(255,255,255,.04);
-}
-
-.status{
-  padding:6px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:600;
-}
-
-.status-shortlisted{background:rgba(34,197,94,.15);color:var(--green)}
-.status-rejected{background:rgba(239,68,68,.15);color:var(--red)}
-.status-pending{background:rgba(250,204,21,.15);color:var(--yellow)}
-
-a{text-decoration:none;color:#93c5fd}
 
 .footer{
   margin-top:40px;
@@ -186,100 +122,32 @@ a{text-decoration:none;color:#93c5fd}
 <!-- METRICS -->
 <div class="metrics">
   <div class="card">
-    <div class="metric-title">Total Candidates</div>
+    <div class="metric-title">Total Applications</div>
     <div class="metric-value blue">{{ total }}</div>
   </div>
+
   <div class="card">
     <div class="metric-title">Shortlisted</div>
     <div class="metric-value green">{{ shortlisted }}</div>
   </div>
+
   <div class="card">
     <div class="metric-title">Rejected</div>
     <div class="metric-value red">{{ rejected }}</div>
   </div>
+
   <div class="card">
     <div class="metric-title">Pending</div>
-    <div class="metric-value yellow">{{ analyzed }}</div>
+    <div class="metric-value yellow">{{ pending }}</div>
   </div>
 
-  <!-- NEW CREATE JOB BUTTON -->
+  <!-- Manage Jobs -->
   <div class="card" style="display:flex;align-items:center;justify-content:center">
     <a href="/recruiter/jobs">
       <button class="btn">➕ Manage Jobs</button>
     </a>
   </div>
-
-  <div class="card" style="display:flex;align-items:center;justify-content:center">
-    <a href="/recruiter/candidates">
-      <button class="btn">View All Candidates</button>
-    </a>
-  </div>
 </div>
-
-<!-- JOB CRITERIA -->
-<form method="POST" action="/recruiter/filter-candidates" class="card">
-<h3>Job Criteria & ATS Rules</h3>
-
-<div class="form-grid">
-  <div>
-    <label>Required Degree</label>
-    <input type="text" name="degree" placeholder="B.Tech, MCA">
-  </div>
-  <div>
-    <label>Required Skills</label>
-    <input type="text" name="skills" placeholder="python, flask, sql">
-  </div>
-  <div>
-    <label>Minimum ATS Score</label>
-    <input type="number" name="min_ats" value="60">
-  </div>
-</div>
-
-<div style="margin-top:18px">
-  <label>Job Description</label>
-  <textarea name="job_description" rows="4"
-    placeholder="Paste job description used for ATS matching..."></textarea>
-</div>
-
-<button class="btn" style="margin-top:18px">
-  🔍 Auto-Shortlist using ATS
-</button>
-</form>
-
-<!-- RANKED -->
-{% if session.get("ranked_candidates") %}
-<div class="card" style="margin-top:30px">
-<h3>Ranked Candidates (ATS)</h3>
-
-<table>
-<tr>
-  <th>#</th>
-  <th>Resume</th>
-  <th>ATS %</th>
-  <th>Status</th>
-  <th>Action</th>
-</tr>
-
-{% for c in session["ranked_candidates"] %}
-<tr>
-  <td>{{ loop.index }}</td>
-  <td><a href="/recruiter/analysis/{{ c.id }}">{{ c.filename }}</a></td>
-  <td>{{ c.ats_score }}%</td>
-  <td>
-    <span class="status status-{{ c.status }}">{{ c.status }}</span>
-  </td>
-  <td>
-    <form method="POST" action="/update-status" style="display:inline">
-      <input type="hidden" name="resume_id" value="{{ c.id }}">
-      <input type="hidden" name="status" value="shortlisted">
-      <button class="btn">Shortlist</button>
-    </form>
-  </td>
-</tr>
-{% endfor %}
-</table>
-</div>
-{% endif %}
 
 <div class="footer">
   <a href="/logout">Logout</a>
