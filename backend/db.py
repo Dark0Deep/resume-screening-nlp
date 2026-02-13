@@ -8,3 +8,5 @@ db = client["resume_db"]
 
 users_collection = db["users"]
 resumes_collection = db["resumes"]
+jobs_collection = db["jobs"]
+applications_collection = db["applications"]

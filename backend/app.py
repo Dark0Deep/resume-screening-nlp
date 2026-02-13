@@ -13,7 +13,7 @@ from backend.nlp.matcher import calculate_simple_ats
 from backend.nlp.matcher import calculate_ats_score
 
 # ================= DB =================
-from backend.db import users_collection, resumes_collection
+from backend.db import users_collection, resumes_collection, jobs_collection, applications_collection
 
 # ================= APP =================
 app = Flask(
