@@ -386,42 +386,47 @@ def recruiter_job_applicants(job_id):
 
     recruiter_id = session.get("user_id")
 
-    # 1️⃣ Get job
-    job = jobs_collection.find_one({
-        "_id": ObjectId(job_id),
-        "created_by": recruiter_id
-    })
+    try:
+        job = jobs_collection.find_one({
+            "_id": ObjectId(job_id),
+            "created_by": recruiter_id
+        })
+    except:
+        flash("Invalid job ID")
+        return redirect("/recruiter/jobs")
 
     if not job:
         flash("Job not found")
         return redirect("/recruiter/jobs")
 
-    # 2️⃣ Get applications for this job
-    applications = list(applications_collection.find({
-        "job_id": job_id
-    }).sort("applied_at", -1))
+    applications = list(
+        applications_collection.find({"job_id": job_id})
+    )
 
     enriched_apps = []
 
     for app_doc in applications:
 
-        candidate = users_collection.find_one({
-            "_id": ObjectId(app_doc["candidate_id"])
-        })
+        try:
+            candidate = users_collection.find_one({
+                "_id": ObjectId(app_doc.get("candidate_id"))
+            })
 
-        resume = resumes_collection.find_one({
-            "_id": ObjectId(app_doc["resume_id"])
-        })
+            resume = resumes_collection.find_one({
+                "_id": ObjectId(app_doc.get("resume_id"))
+            })
 
-        enriched_apps.append({
-            "application_id": str(app_doc["_id"]),
-            "candidate_name": candidate.get("name") if candidate else "Unknown",
-            "candidate_email": candidate.get("email") if candidate else "",
-            "resume_filename": resume.get("filename") if resume else "",
-            "match_score": app_doc.get("match_score", 0),
-            "status": app_doc.get("status", "pending"),
-            "applied_at": app_doc.get("applied_at")
-        })
+            enriched_apps.append({
+                "application_id": str(app_doc["_id"]),
+                "candidate_name": candidate.get("name") if candidate else "Unknown",
+                "candidate_email": candidate.get("email") if candidate else "",
+                "resume_filename": resume.get("filename") if resume else "",
+                "match_score": app_doc.get("match_score", 0),
+                "status": app_doc.get("status", "pending"),
+                "applied_at": app_doc.get("applied_at")
+            })
+        except:
+            continue
 
     return render_template(
         "recruiter/manage_applicants.html",
