@@ -30,9 +30,14 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # AUTH
 # ======================================================
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
+def landing():
+    return render_template("landing.html")
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
+
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]
