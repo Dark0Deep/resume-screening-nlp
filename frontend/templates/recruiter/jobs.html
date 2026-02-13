@@ -1,4 +1,7 @@
-{% extends "base.html" %}
+{% extends "layouts/base.html" %}
+
+{% block title %}My Jobs{% endblock %}
+{% block heading %}My Job Posts{% endblock %}
 
 {% block content %}
 
@@ -110,6 +113,12 @@
             -
           {% endif %}
         </span>
+      </div>
+
+      <div style="margin-top:15px;">
+        <a href="/recruiter/job/{{ job._id }}">
+          <button class="btn">Manage Applicants</button>
+        </a>
       </div>
 
     </div>
