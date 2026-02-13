@@ -279,10 +279,21 @@ def candidate_recruiters():
 
 @app.route("/candidate/recruiter/<recruiter_id>")
 def view_recruiter_jobs(recruiter_id):
+
     if session.get("role") != "Candidate":
         return redirect("/login")
 
-    recruiter = users_collection.find_one({"_id": ObjectId(recruiter_id)})
+    try:
+        recruiter_obj_id = ObjectId(recruiter_id)
+    except:
+        flash("Invalid recruiter ID")
+        return redirect("/candidate/recruiters")
+
+    recruiter = users_collection.find_one({"_id": recruiter_obj_id})
+
+    if not recruiter:
+        flash("Recruiter not found")
+        return redirect("/candidate/recruiters")
 
     jobs = list(
         jobs_collection.find({"created_by": recruiter_id})
