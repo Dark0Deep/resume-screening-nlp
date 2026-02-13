@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{% block title %}{% endblock %}</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- RECRUITER SIDEBAR -->
+    <aside class="sidebar">
+        <h2 class="logo">Recruiter Panel</h2>
+
+        <nav class="nav-links">
+
+            <a href="/recruiter-dashboard"
+               class="nav-item {% if request.path == '/recruiter-dashboard' %}active{% endif %}">
+                📊 <span>Dashboard</span>
+            </a>
+
+            <a href="/recruiter/jobs"
+               class="nav-item {% if '/recruiter/jobs' in request.path %}active{% endif %}">
+                💼 <span>Manage Jobs</span>
+            </a>
+
+            <a href="/logout" class="nav-item logout">
+                🚪 <span>Logout</span>
+            </a>
+
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <header class="topbar">
+            <h1>{% block heading %}{% endblock %}</h1>
+        </header>
+
+        <section class="content">
+            {% block content %}{% endblock %}
+        </section>
+
+    </div>
+
+</div>
+
+</body>
+</html>
