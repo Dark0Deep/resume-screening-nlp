@@ -33,12 +33,11 @@
                 ⬆️ <span>Resume Upload</span>
             </a>
 
-            <!-- ANALYSIS (SAFE + ALWAYS WORKING) -->
+            <!-- ANALYSIS -->
             <a href="/candidate/analysis/latest"
-                class="nav-item {% if 'analysis' in request.path %}active{% endif %}">
+               class="nav-item {% if 'analysis' in request.path %}active{% endif %}">
                 📈 <span>Analysis</span>
             </a>
-
 
             <!-- SUGGESTIONS -->
             <a href="/candidate/suggestions"
@@ -46,8 +45,10 @@
                 💡 <span>Suggestions</span>
             </a>
 
-            <a href="/candidate/recruiters">
-                <span>🏢</span> Browse Recruiters
+            <!-- ✅ FIXED BROWSE RECRUITERS -->
+            <a href="/candidate/recruiters"
+               class="nav-item {% if request.path == '/candidate/recruiters' %}active{% endif %}">
+                🏢 <span>Browse Recruiters</span>
             </a>
 
             <!-- LOGOUT -->
