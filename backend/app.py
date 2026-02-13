@@ -261,6 +261,43 @@ def latest_analysis():
     return redirect(f"/candidate/analysis/{resume['_id']}")
 
 # ======================================================
+# CANDIDATE - VIEW RECRUITERS
+# ======================================================
+
+@app.route("/candidate/recruiters")
+def candidate_recruiters():
+    if session.get("role") != "Candidate":
+        return redirect("/login")
+
+    recruiters = list(
+        users_collection.find({"role": "Recruiter"})
+    )
+
+    return render_template(
+        "candidate/recruiters.html",
+        recruiters=recruiters
+    )
+
+@app.route("/candidate/recruiter/<recruiter_id>")
+def view_recruiter_jobs(recruiter_id):
+    if session.get("role") != "Candidate":
+        return redirect("/login")
+
+    recruiter = users_collection.find_one({"_id": ObjectId(recruiter_id)})
+
+    jobs = list(
+        jobs_collection.find({"created_by": recruiter_id})
+        .sort("created_at", -1)
+    )
+
+    return render_template(
+        "candidate/recruiter_jobs.html",
+        recruiter=recruiter,
+        jobs=jobs
+    )
+
+
+# ======================================================
 # RECRUITER SIDE (FINAL & STABLE)
 # ======================================================
 

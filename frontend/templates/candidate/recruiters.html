@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Browse Recruiters</title>
+</head>
+<body>
+
+<h2>Available Recruiters</h2>
+
+{% for r in recruiters %}
+  <div style="margin-bottom:15px;">
+    <a href="/candidate/recruiter/{{ r._id }}">
+      {{ r.name }}
+    </a>
+  </div>
+{% endfor %}
+
+<a href="/candidate/dashboard">Back</a>
+
+</body>
+</html>

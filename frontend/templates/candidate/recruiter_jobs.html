@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>{{ recruiter.name }} Jobs</title>
+</head>
+<body>
+
+<h2>Jobs posted by {{ recruiter.name }}</h2>
+
+{% if jobs %}
+  {% for job in jobs %}
+    <div style="margin-bottom:20px; border:1px solid #ccc; padding:10px;">
+      <h3>{{ job.title }}</h3>
+      <p>{{ job.description }}</p>
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No jobs posted yet.</p>
+{% endif %}
+
+<a href="/candidate/recruiters">Back</a>
+
+</body>
+</html>
