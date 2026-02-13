@@ -1,83 +1,112 @@
 {% extends "base.html" %}
 
-
 {% block title %}Manage Applicants{% endblock %}
 {% block heading %}Manage Applicants{% endblock %}
 
 {% block content %}
 
+<!-- ================= JOB DETAILS ================= -->
 <div class="card">
-    <h2>{{ job.title }}</h2>
-    <p>{{ job.description }}</p>
+    <h2 style="margin-bottom:10px;">{{ job.title }}</h2>
+    <p style="color:#94a3b8;">{{ job.description }}</p>
 </div>
 
+<!-- ================= APPLICANTS ================= -->
 <div class="card" style="margin-top:30px;">
-    <h3>Applicants</h3>
+    <h3 style="margin-bottom:20px;">Applicants</h3>
 
     {% if applications and applications|length > 0 %}
 
     <table>
-        <tr>
-            <th>Candidate</th>
-            <th>Resume</th>
-            <th>Match %</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>Resume</th>
+                <th>ATS Score</th>
+                <th>Skills</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
 
+        <tbody>
         {% for app in applications %}
         <tr>
-            <p><strong>ATS Score:</strong> {{ app.ats_score }}%</p>
 
-<p><strong>Skills:</strong>
-  {% if app.skills %}
-    {{ app.skills | join(', ') }}
-  {% else %}
-    —
-  {% endif %}
-</p>
-
-<p><strong>Summary:</strong>
-  {{ app.summary }}
-</p>
-
-
+            <!-- Candidate Info -->
             <td>
-                {{ app.candidate_name }} <br>
-                <small>{{ app.candidate_email }}</small>
+                <strong>{{ app.candidate_name }}</strong><br>
+                <small style="color:#94a3b8;">{{ app.candidate_email }}</small>
             </td>
 
+            <!-- Resume -->
             <td>{{ app.resume_filename }}</td>
 
-            <td>{{ app.match_score }}%</td>
-
+            <!-- ATS -->
             <td>
-                <span class="status-pill">
-                    {{ app.status }}
-                </span>
+                <strong>{{ app.ats_score if app.ats_score else app.match_score }}%</strong>
             </td>
 
+            <!-- Skills -->
             <td>
-                <form method="POST" action="/recruiter/update-application-status" style="display:inline;">
+                {% if app.skills %}
+                    {{ app.skills | join(', ') }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+
+            <!-- Status -->
+            <td>
+                {% if app.status == "shortlisted" %}
+                    <span class="status-pill status-shortlisted">Shortlisted</span>
+                {% elif app.status == "rejected" %}
+                    <span class="status-pill status-rejected">Rejected</span>
+                {% else %}
+                    <span class="status-pill status-pending">Pending</span>
+                {% endif %}
+            </td>
+
+            <!-- Action -->
+            <td style="display:flex; gap:8px; flex-wrap:wrap;">
+
+                {% if app.status != "shortlisted" %}
+                <form method="POST" action="/recruiter/update-application-status">
                     <input type="hidden" name="application_id" value="{{ app.application_id }}">
                     <input type="hidden" name="status" value="shortlisted">
-                    <button>Shortlist</button>
+                    <button class="btn">Shortlist</button>
                 </form>
+                {% endif %}
 
-                <form method="POST" action="/recruiter/update-application-status" style="display:inline;">
+                {% if app.status != "rejected" %}
+                <form method="POST" action="/recruiter/update-application-status">
                     <input type="hidden" name="application_id" value="{{ app.application_id }}">
                     <input type="hidden" name="status" value="rejected">
-                    <button style="background:#ef4444;">Reject</button>
+                    <button class="btn" style="background:#ef4444;">Reject</button>
                 </form>
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        <!-- Resume Summary Row -->
+        <tr>
+            <td colspan="6" style="background:#0f172a; padding:15px; font-size:14px; color:#94a3b8;">
+                <strong>Summary:</strong><br>
+                {{ app.summary if app.summary else "No summary available." }}
             </td>
         </tr>
-        {% endfor %}
 
+        {% endfor %}
+        </tbody>
     </table>
 
     {% else %}
 
-    <p>No applications yet.</p>
+    <div style="padding:20px; text-align:center; color:#94a3b8;">
+         No applications yet for this job.
+    </div>
 
     {% endif %}
 </div>

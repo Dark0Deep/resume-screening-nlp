@@ -387,21 +387,44 @@ def candidate_apply(job_id):
 
 @app.route("/recruiter-dashboard")
 def recruiter_dashboard():
+
     if session.get("role") != "Recruiter":
         return redirect("/login")
 
-    total = resumes_collection.count_documents({})
-    analyzed = resumes_collection.count_documents({"status": "analyzed"})
-    shortlisted = resumes_collection.count_documents({"status": "shortlisted"})
-    rejected = resumes_collection.count_documents({"status": "rejected"})
+    recruiter_id = session.get("user_id")
+
+    # Get all jobs created by recruiter
+    jobs = list(jobs_collection.find({"created_by": recruiter_id}))
+
+    job_ids = [str(job["_id"]) for job in jobs]
+
+    total = applications_collection.count_documents({
+        "job_id": {"$in": job_ids}
+    })
+
+    shortlisted = applications_collection.count_documents({
+        "job_id": {"$in": job_ids},
+        "status": "shortlisted"
+    })
+
+    rejected = applications_collection.count_documents({
+        "job_id": {"$in": job_ids},
+        "status": "rejected"
+    })
+
+    pending = applications_collection.count_documents({
+        "job_id": {"$in": job_ids},
+        "status": "pending"
+    })
 
     return render_template(
         "recruiter_dashboard.html",
         total=total,
-        analyzed=analyzed,
         shortlisted=shortlisted,
-        rejected=rejected
+        rejected=rejected,
+        analyzed=pending   # reuse variable for UI
     )
+
 
 # ======================================================
 # RECRUITER → VIEW JOB APPLICANTS (SECURE)
@@ -482,6 +505,7 @@ def update_application_status():
     )
 
     flash("Application status updated successfully")
+
     return redirect(request.referrer)
 
 # ======================================================
