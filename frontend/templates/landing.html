@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Hiring Intelligence | Smart ATS Platform</title>
+<title>SmartHire AI | Intelligent Hiring Infrastructure</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --bg:#0f172a;
-  --card:rgba(255,255,255,.05);
+  --bg:#0b1120;
   --primary:#6366f1;
   --secondary:#22d3ee;
-  --text:#e5e7eb;
+  --accent:#8b5cf6;
+  --text:#e2e8f0;
   --muted:#94a3b8;
 }
 
@@ -29,17 +29,37 @@ body{
   overflow-x:hidden;
 }
 
-/* NAVBAR */
+/* Animated Background */
+body::before{
+  content:"";
+  position:fixed;
+  width:120%;
+  height:120%;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(99,102,241,.25), transparent 40%),
+    radial-gradient(circle at 80% 40%, rgba(34,211,238,.2), transparent 40%),
+    radial-gradient(circle at 50% 80%, rgba(139,92,246,.2), transparent 40%);
+  animation:moveBg 20s infinite alternate ease-in-out;
+  z-index:-1;
+}
+
+@keyframes moveBg{
+  0%{transform:translateY(0px)}
+  100%{transform:translateY(-40px)}
+}
+
+/* NAV */
 nav{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:25px 60px;
+  padding:30px 80px;
 }
 
 .logo{
-  font-weight:800;
-  font-size:20px;
+  font-weight:900;
+  font-size:22px;
+  letter-spacing:1px;
   background:linear-gradient(135deg,var(--primary),var(--secondary));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -51,57 +71,54 @@ nav{
 }
 
 .btn{
-  padding:10px 20px;
-  border-radius:10px;
+  padding:11px 22px;
+  border-radius:12px;
   font-weight:600;
-  cursor:pointer;
   border:none;
-  transition:.3s;
+  cursor:pointer;
+  transition:.3s ease;
 }
 
 .btn-primary{
   background:linear-gradient(135deg,var(--primary),var(--secondary));
   color:white;
+  box-shadow:0 15px 35px rgba(99,102,241,.4);
 }
 
 .btn-outline{
   border:1px solid var(--primary);
-  color:var(--primary);
   background:transparent;
+  color:var(--primary);
 }
 
 .btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 10px 25px rgba(99,102,241,.4);
+  transform:translateY(-3px);
 }
 
 /* HERO */
 .hero{
   text-align:center;
-  padding:120px 20px 80px 20px;
-  background:
-    radial-gradient(circle at 20% 40%, rgba(99,102,241,.2), transparent 50%),
-    radial-gradient(circle at 80% 30%, rgba(34,211,238,.2), transparent 50%);
+  padding:140px 20px 100px;
 }
 
 .hero h1{
-  font-size:56px;
-  font-weight:800;
-  max-width:900px;
+  font-size:64px;
+  font-weight:900;
+  line-height:1.15;
+  max-width:950px;
   margin:auto;
-  line-height:1.2;
   animation:fadeUp 1s ease;
 }
 
-.hero h1 span{
+.hero span{
   background:linear-gradient(135deg,var(--primary),var(--secondary));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
 .hero p{
-  margin-top:25px;
-  font-size:18px;
+  margin-top:30px;
+  font-size:20px;
   color:var(--muted);
   max-width:750px;
   margin-left:auto;
@@ -110,53 +127,48 @@ nav{
 }
 
 .hero-buttons{
-  margin-top:40px;
+  margin-top:45px;
   animation:fadeUp 1.8s ease;
 }
 
-/* DASHBOARD PREVIEW */
-.preview{
-  padding:100px 60px;
+/* TRUST STRIP */
+.trust{
   text-align:center;
-}
-
-.preview-box{
-  margin-top:50px;
-  background:var(--card);
-  backdrop-filter:blur(20px);
-  border-radius:20px;
-  padding:30px;
-  box-shadow:0 30px 60px rgba(0,0,0,.6);
-  animation:fadeUp 1.2s ease;
+  padding:60px 20px;
+  color:var(--muted);
+  font-size:14px;
+  letter-spacing:1px;
 }
 
 /* FEATURES */
 .features{
-  padding:100px 60px;
+  padding:120px 80px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
   gap:40px;
 }
 
 .feature-card{
-  background:var(--card);
-  padding:30px;
-  border-radius:18px;
-  transition:.3s;
+  background:rgba(255,255,255,.05);
+  backdrop-filter:blur(25px);
+  padding:35px;
+  border-radius:20px;
+  transition:.4s;
 }
 
 .feature-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 20px 40px rgba(0,0,0,.5);
+  transform:translateY(-10px);
+  box-shadow:0 30px 60px rgba(0,0,0,.6);
 }
 
 .feature-card h3{
   margin-bottom:15px;
+  font-size:20px;
 }
 
 /* STATS */
 .stats{
-  padding:100px 60px;
+  padding:120px 20px;
   text-align:center;
 }
 
@@ -164,43 +176,65 @@ nav{
   margin-top:50px;
   display:flex;
   justify-content:center;
-  gap:80px;
+  gap:100px;
   flex-wrap:wrap;
 }
 
 .stat-number{
-  font-size:42px;
-  font-weight:800;
+  font-size:48px;
+  font-weight:900;
   background:linear-gradient(135deg,var(--primary),var(--secondary));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
 
 .stat-text{
-  margin-top:10px;
+  margin-top:12px;
   color:var(--muted);
+}
+
+/* CTA SECTION */
+.cta{
+  padding:120px 20px;
+  text-align:center;
+}
+
+.cta-box{
+  max-width:800px;
+  margin:auto;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  padding:60px;
+  border-radius:30px;
+  box-shadow:0 40px 80px rgba(0,0,0,.7);
+}
+
+.cta-box h2{
+  font-size:36px;
+  margin-bottom:20px;
+}
+
+.cta-box p{
+  margin-bottom:30px;
 }
 
 /* FOOTER */
 .footer{
-  padding:60px 20px;
   text-align:center;
-  color:var(--muted);
+  padding:60px 20px;
   border-top:1px solid rgba(255,255,255,.1);
-  margin-top:80px;
+  color:var(--muted);
 }
 
 /* ANIMATION */
 @keyframes fadeUp{
-  from{opacity:0; transform:translateY(30px);}
-  to{opacity:1; transform:translateY(0);}
+  from{opacity:0; transform:translateY(30px)}
+  to{opacity:1; transform:translateY(0)}
 }
 </style>
 </head>
 
 <body>
 
-<!-- NAVBAR -->
 <nav>
   <div class="logo">SmartHire AI</div>
   <div class="nav-buttons">
@@ -209,17 +243,15 @@ nav{
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <h1>
-    AI-Powered Hiring Intelligence  
-    <span>Built for Modern Recruiters</span>
+    Build Your Hiring Engine with  
+    <span>AI-Powered Resume Intelligence</span>
   </h1>
 
   <p>
-    Screen resumes, rank candidates, manage applications, 
-    and make data-driven hiring decisions —
-    all from one powerful ATS platform designed for startups and scaling teams.
+    From job creation to automated ATS scoring and secure recruiter isolation —
+    SmartHire AI transforms resume screening into a data-driven decision engine.
   </p>
 
   <div class="hero-buttons">
@@ -227,52 +259,39 @@ nav{
   </div>
 </section>
 
-<!-- DASHBOARD PREVIEW -->
-<section class="preview">
-  <h2 style="font-size:32px;">See Hiring Intelligence in Action</h2>
-  <p style="color:#94a3b8; margin-top:15px;">
-    Real-time ATS scoring, job-based shortlisting & recruiter isolation.
-  </p>
+<div class="trust">
+  Trusted by modern recruiters • Startup-ready architecture • Secure multi-tenant design
+</div>
 
-  <div class="preview-box">
-    <img src="https://dummyimage.com/900x450/111827/ffffff&text=Recruiter+Dashboard+Preview"
-         style="width:100%; border-radius:16px;">
-  </div>
-</section>
-
-<!-- FEATURES -->
 <section class="features">
   <div class="feature-card">
-    <h3>⚡ AI Resume Parsing</h3>
-    <p>Extract skills, education, projects, and experience automatically.</p>
+    <h3>⚡ Intelligent Resume Parsing</h3>
+    <p>Extract structured data from resumes using NLP-powered analysis.</p>
   </div>
 
   <div class="feature-card">
-    <h3>🎯 ATS Scoring Engine</h3>
-    <p>Rank candidates based on job description & recruiter criteria.</p>
+    <h3>🎯 Job-Based ATS Scoring</h3>
+    <p>Match candidates against job descriptions and recruiter-defined criteria.</p>
   </div>
 
   <div class="feature-card">
-    <h3>🔒 Secure Multi-Tenant Architecture</h3>
-    <p>Recruiters only see applications for their own job posts.</p>
+    <h3>🔒 Recruiter Data Isolation</h3>
+    <p>Each recruiter sees only their own job applications — secure by design.</p>
   </div>
 </section>
 
-<!-- STATS -->
 <section class="stats">
-  <h2>Trusted Hiring Intelligence</h2>
+  <h2>Designed for Performance & Scale</h2>
 
   <div class="stats-grid">
     <div>
       <div class="stat-number">100%</div>
-      <div class="stat-text">Recruiter Data Isolation</div>
+      <div class="stat-text">Data Isolation</div>
     </div>
-
     <div>
       <div class="stat-number">AI</div>
-      <div class="stat-text">NLP Powered Analysis</div>
+      <div class="stat-text">NLP Analysis Engine</div>
     </div>
-
     <div>
       <div class="stat-number">ATS</div>
       <div class="stat-text">Smart Candidate Ranking</div>
@@ -280,11 +299,21 @@ nav{
   </div>
 </section>
 
-<!-- FOOTER -->
+<section class="cta">
+  <div class="cta-box">
+    <h2>Ready to Transform Your Hiring Process?</h2>
+    <p>
+      Upgrade from manual resume screening to intelligent hiring automation.
+    </p>
+    <a href="/register">
+      <button class="btn btn-primary">Create Free Account</button>
+    </a>
+  </div>
+</section>
+
 <div class="footer">
-  Built with Flask • MongoDB • NLP • Production-Ready Architecture  
-  <br><br>
-  © 2026 SmartHire AI — Modern Hiring Infrastructure
+  © 2026 SmartHire AI • Built with Flask + MongoDB + NLP  
+  Modern Hiring Infrastructure
 </div>
 
 </body>
