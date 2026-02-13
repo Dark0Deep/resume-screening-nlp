@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+    <h2>Create New Job</h2>
+
+    <form method="POST" class="job-form">
+        <input type="text" name="title"
+               placeholder="Job Title" required>
+
+        <textarea name="description"
+                  placeholder="Job Description"
+                  rows="6" required></textarea>
+
+        <button type="submit">Create Job</button>
+    </form>
+</div>
+
+<style>
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+}
+
+.job-form input,
+.job-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: #0f172a;
+    border: 1px solid #1e293b;
+    border-radius: 8px;
+    color: white;
+}
+
+button {
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #6366f1, #3b82f6);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+}
+</style>
+
+{% endblock %}

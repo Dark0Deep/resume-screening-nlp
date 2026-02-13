@@ -282,6 +282,52 @@ def recruiter_dashboard():
         rejected=rejected
     )
 
+# ======================================================
+# RECRUITER JOB MANAGEMENT (PHASE 2)
+# ======================================================
+
+@app.route("/recruiter/jobs")
+def recruiter_jobs():
+    if session.get("role") != "Recruiter":
+        return redirect("/login")
+
+    recruiter_id = session.get("user_id")
+
+    jobs = list(
+        jobs_collection.find({"created_by": recruiter_id})
+        .sort("created_at", -1)
+    )
+
+    # Count applicants per job
+    for job in jobs:
+        applicant_count = applications_collection.count_documents({
+            "job_id": str(job["_id"])
+        })
+        job["applicant_count"] = applicant_count
+
+    return render_template("recruiter/jobs.html", jobs=jobs)
+
+@app.route("/recruiter/create-job", methods=["GET", "POST"])
+def create_job():
+    if session.get("role") != "Recruiter":
+        return redirect("/login")
+
+    if request.method == "POST":
+        title = request.form.get("title")
+        description = request.form.get("description")
+
+        jobs_collection.insert_one({
+            "title": title,
+            "description": description,
+            "created_by": session.get("user_id"),
+            "created_at": datetime.utcnow()
+        })
+
+        flash("✅ Job created successfully")
+        return redirect("/recruiter/jobs")
+
+    return render_template("recruiter/create_job.html")
+
 
 @app.route("/recruiter/candidates")
 def recruiter_candidates():
