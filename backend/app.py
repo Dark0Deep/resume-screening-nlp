@@ -295,8 +295,8 @@ def recruiter_jobs():
 
     jobs = list(
         jobs_collection.find({"created_by": recruiter_id})
-        .sort("created_at", -1)
     )
+
 
     # Count applicants per job
     for job in jobs:
