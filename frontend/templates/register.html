@@ -1,56 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Register | Resume Screening</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<title>Register | Resume Screening</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#0f172a;
+  --primary:#6366f1;
+  --secondary:#3b82f6;
+  --card:rgba(255,255,255,.05);
+  --border:rgba(255,255,255,.1);
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:Inter,sans-serif;
+}
+
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,#0f172a,#1e293b);
+  color:var(--text);
+}
+
+/* Glass Card */
+.card{
+  width:420px;
+  padding:40px;
+  border-radius:20px;
+  background:var(--card);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+
+h2{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+/* Flash */
+.flash{
+  background:rgba(34,197,94,.15);
+  border:1px solid #22c55e;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:20px;
+  font-size:14px;
+  text-align:center;
+}
+
+/* Inputs */
+input,select{
+  width:100%;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#0f172a;
+  color:var(--text);
+  margin-bottom:15px;
+}
+
+input:focus,select:focus{
+  outline:none;
+  border-color:var(--primary);
+}
+
+/* Button */
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.3s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 12px 30px rgba(99,102,241,.4);
+}
+
+.footer{
+  text-align:center;
+  margin-top:20px;
+  font-size:14px;
+  color:var(--muted);
+}
+
+a{
+  color:#93c5fd;
+  text-decoration:none;
+}
+</style>
 </head>
 
 <body>
 
-<div class="auth-container">
+<div class="card">
 
-    <div class="auth-card">
+<h2>Create Account</h2>
 
-        <h2>Create Account</h2>
-        <p class="subtitle">Join Resume Screening Platform</p>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash">{{ messages[0] }}</div>
+{% endif %}
+{% endwith %}
 
-        <form method="POST">
+<form method="POST">
 
-            <div class="form-group">
-                <label>Full Name</label>
-                <input type="text" name="name" required placeholder="Enter your name">
-            </div>
+<input type="text" name="name" placeholder="Full Name" required>
 
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" required placeholder="Enter your email">
-            </div>
+<input type="email" name="email" placeholder="Email Address" required>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" required placeholder="Create password">
-            </div>
+<input type="password" name="password" placeholder="Password" required>
 
-            <div class="form-group">
-                <label>Register As</label>
-                <select name="role" required>
-                    <option value="Candidate">Candidate</option>
-                    <option value="Recruiter">Recruiter</option>
-                </select>
-            </div>
+<select name="role" required>
+  <option value="">Select Role</option>
+  <option value="Candidate">Candidate</option>
+  <option value="Recruiter">Recruiter</option>
+</select>
 
-            <button type="submit" class="auth-btn">Register</button>
+<button type="submit">Register</button>
 
-        </form>
+</form>
 
-        <div class="auth-footer">
-            Already have an account?
-            <a href="/login">Login</a>
-        </div>
-
-    </div>
+<div class="footer">
+  Already have an account?
+  <a href="/login">Login</a>
+</div>
 
 </div>
 
