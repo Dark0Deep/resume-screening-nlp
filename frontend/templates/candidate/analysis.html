@@ -53,11 +53,11 @@
   <h4>Skills</h4>
 
   {% if resume.skills and resume.skills|length > 0 %}
-    <ul class="skill-list">
+    <div class="skills-container">
       {% for skill in resume.skills %}
-        <li>{{ skill }}</li>
+        <span class="skill-badge">{{ skill }}</span>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
     <p>No skills detected.</p>
   {% endif %}
@@ -68,18 +68,27 @@
   <h4>Experience</h4>
 
   {% if resume.experience and resume.experience|length > 0 %}
-    <ul>
+    <div class="timeline">
       {% for e in resume.experience %}
-        <li>
-          <b>{{ e.title }}</b>
-          {% if e.company %} – {{ e.company }}{% endif %}
-          {% if e.duration %} ({{ e.duration }}){% endif %}
-          {% if e.description %}
-            <br><small>{{ e.description }}</small>
-          {% endif %}
-        </li>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <h5>{{ e.title }}</h5>
+            {% if e.duration %}
+              <div class="timeline-duration">{{ e.duration }}</div>
+            {% endif %}
+
+            {% if e.points %}
+              <ul>
+                {% for point in e.points %}
+                  <li>{{ point }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
     <p>No experience found.</p>
   {% endif %}
@@ -90,13 +99,29 @@
   <h4>Projects</h4>
 
   {% if resume.projects and resume.projects|length > 0 %}
-    <ul>
+    <div class="project-grid">
       {% for p in resume.projects %}
-        {% if p.strip() %}
-          <li>{{ p.lstrip("•- ") }}</li>
-        {% endif %}
+        <div class="project-card">
+          <h5>{{ p.name }}</h5>
+
+          {% if p.tech_stack and p.tech_stack|length > 0 %}
+            <div class="tech-stack">
+              {% for tech in p.tech_stack %}
+                <span class="tech-badge">{{ tech }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if p.points %}
+            <ul>
+              {% for point in p.points %}
+                <li>{{ point }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
       {% endfor %}
-    </ul>
+    </div>
   {% else %}
     <p>No projects mentioned.</p>
   {% endif %}
