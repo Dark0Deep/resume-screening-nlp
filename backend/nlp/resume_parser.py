@@ -104,10 +104,22 @@ def extract_location(text):
 # ======================================================
 
 SECTION_HEADERS = {
-    "skills": ["skills", "technical skills"],
-    "education": ["education", "academics"],
-    "experience": ["experience", "work experience", "employment"],
-    "projects": ["projects"],
+    "skills": ["skills", "technical skills", "core skills","SKILLS","Skills","TECHNICAL SKILLS"],
+    "education": ["education", "academics", "academic background","Academics"],
+    "experience": [
+        "experience","Experience",
+        "work experience",
+        "professional experience",
+        "employment",
+        "employment history"
+    ],
+    "projects": [
+        "projects",
+        "academic projects",
+        "key projects",
+        "relevant projects",
+        "project experience","Worked on","PROJECTS","PROJECT"
+    ],
     "certifications": ["certifications", "certificates"],
     "publications": ["publications", "research"],
     "hobbies": ["hobbies", "interests"]
@@ -120,14 +132,24 @@ def split_sections(text):
     for line in text.split("\n"):
         clean = line.strip().lower()
 
-        matched = False
+        # Remove special characters from heading
+        clean = re.sub(r"[^a-z\s]", "", clean)
+
+        matched_section = None
+
         for key, headers in SECTION_HEADERS.items():
-            if any(clean == h or clean.startswith(h) for h in headers):
-                current = key
-                matched = True
+            for h in headers:
+                if h in clean:
+                    matched_section = key
+                    break
+            if matched_section:
                 break
 
-        if not matched and current:
+        if matched_section:
+            current = matched_section
+            continue
+
+        if current and line.strip():
             sections[current].append(line.strip())
 
     return {
@@ -175,7 +197,7 @@ def parse_resume(file_path):
         "phone": extract_phone(clean_text),
         "location": extract_location(raw_text),
 
-        "skills": sections.get("skills", ""),
+        "skills": sections.get("skills", "").split("\n") if sections.get("skills") else [],
         "education": sections.get("education", ""),
         "experience": parse_experience(sections.get("experience", "")),
         "projects": sections.get("projects", "").split("\n") if sections.get("projects") else [],
