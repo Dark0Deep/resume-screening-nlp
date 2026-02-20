@@ -112,7 +112,7 @@ def upload_resume():
         flash("❌ No file selected")
         return redirect("/candidate/upload")
 
-    file_path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+    file_path = os.path.join(app.root_path, app.config["UPLOAD_FOLDER"], file.filename)
     file.save(file_path)
 
     user_id = session.get("user_id")
@@ -188,13 +188,22 @@ def analyze_resume():
     }
 
     projects = parsed.get("projects", [])
-    if isinstance(projects, str):
-        projects = [projects]
+
+    project_text_list = []
+
+    for p in projects:
+        if isinstance(p, dict):
+            project_text_list.append(p.get("name", ""))
+            project_text_list.extend(p.get("points", []))
+        else:
+            project_text_list.append(str(p))
+
+    project_text = " ".join(project_text_list)
 
     sections = {
         "skills": parsed.get("skills", ""),
         "experience": " ".join([e.get("title", "") for e in parsed.get("experience", [])]),
-        "projects": " ".join(projects)
+        "projects": project_text
     }
 
     skills_meta = extract_skills_from_sections(sections)
