@@ -112,74 +112,63 @@ def calculate_ats_score(resume_text, job_description, resume_skills, sections, r
         "semantic_score": semantic_score,
         "section_score": section_score
     }
-def calculate_simple_ats(resume, job_criteria):
-    score = 0
-
-    # -------- SKILLS (50) --------
-    required_skills = job_criteria.get("skills", [])
-    resume_skills = [s.lower() for s in resume.get("skills", [])]
-
-    if required_skills:
-        matched = sum(1 for s in required_skills if s in resume_skills)
-        score += (matched / len(required_skills)) * 50
-
-    # -------- EDUCATION (20) --------
-    degree = job_criteria.get("degree", "").lower()
-    education_text = str(resume.get("education", "")).lower()
-
-    if degree and degree in education_text:
-        score += 20
-
-    # -------- EXPERIENCE (20) --------
-    experience = resume.get("experience", [])
-    if isinstance(experience, list) and len(experience) > 0:
-        score += min(len(experience) * 5, 20)
-
-    # -------- JD KEYWORDS (10) --------
-    jd = job_criteria.get("job_description", "").lower()
-    raw_text = resume.get("raw_text", "").lower()
-
-    if jd:
-        keywords = jd.split()
-        match_count = sum(1 for k in keywords if k in raw_text)
-        score += min((match_count / len(keywords)) * 10, 10)
-
-    return round(score, 2)
 
 def calculate_simple_ats(resume):
     """
-    Simple professional ATS score without JD
-    Based on resume completeness & keyword strength
+    Improved professional ATS scoring (0–100)
+    Produces natural percentage-based scores
     """
 
     score = 0
 
-    # ===== Skills =====
+    # =========================
+    # 1️⃣ SKILLS (40%)
+    # =========================
     skills = resume.get("skills", [])
-    if skills:
-        score += min(len(skills) * 5, 30)   # max 30
+    unique_skills = len(set(skills))
 
-    # ===== Experience =====
+    # Normalize skill score (assuming 12 skills = strong profile)
+    skill_score = min((unique_skills / 12) * 40, 40)
+
+
+    # =========================
+    # 2️⃣ EXPERIENCE (25%)
+    # =========================
     experience = resume.get("experience", [])
-    if experience:
-        score += min(len(experience) * 10, 30)  # max 30
+    years_weight = len(experience)
 
-    # ===== Education =====
-    education = resume.get("education", "")
-    if education:
-        score += 15
+    exp_score = min((years_weight / 5) * 25, 25)
 
-    # ===== Resume Length / Content =====
+
+    # =========================
+    # 3️⃣ EDUCATION QUALITY (15%)
+    # =========================
+    education = str(resume.get("education", "")).lower()
+
+    edu_score = 0
+    if "phd" in education:
+        edu_score = 15
+    elif "master" in education or "m.tech" in education or "mba" in education:
+        edu_score = 12
+    elif "bachelor" in education or "b.tech" in education:
+        edu_score = 10
+    elif education:
+        edu_score = 6
+
+
+    # =========================
+    # 4️⃣ CONTENT STRENGTH (20%)
+    # =========================
     raw_text = resume.get("raw_text", "")
-    if raw_text:
-        if len(raw_text) > 1500:
-            score += 15
-        elif len(raw_text) > 800:
-            score += 10
-        else:
-            score += 5
+    length = len(raw_text)
 
-    # Safety cap
-    return min(score, 100)
+    content_score = min((length / 2000) * 20, 20)
 
+
+    # =========================
+    # FINAL SCORE
+    # =========================
+    final_score = skill_score + exp_score + edu_score + content_score
+
+    return round(min(final_score, 100), 2)
 
