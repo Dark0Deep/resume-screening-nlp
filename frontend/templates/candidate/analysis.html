@@ -16,7 +16,7 @@
     <div class="ats-subtext">
         Applicant Tracking System Compatibility
     </div>
-</div>
+  </div>
 
   <h4>Summary</h4>
   <p>
@@ -89,39 +89,16 @@
 <div class="card">
   <h4>Projects</h4>
 
-  {% if resume.projects %}
-    {% if resume.projects is string %}
-      <p>{{ resume.projects }}</p>
-    {% else %}
-      <ul>
-        {% for p in resume.projects %}
-          <li>{{ p }}</li>
-        {% endfor %}
-      </ul>
-    {% endif %}
-  {% else %}
-    <p>No projects mentioned.</p>
-  {% endif %}
-</div>
-
-<!-- ================= ATS FEEDBACK ================= -->
-<div class="card">
-  <h4>ATS Evaluation</h4>
-
-  {% if resume.ats_feedback %}
-    {% if resume.ats_feedback.ats_score %}
-      <p><b>ATS Score:</b> {{ resume.ats_feedback.ats_score }}/100</p>
-    {% endif %}
-
+  {% if resume.projects and resume.projects|length > 0 %}
     <ul>
-      {% for f in resume.ats_feedback %}
-        <li>
-          <b>{{ f.priority }}:</b> {{ f.message }}
-        </li>
+      {% for p in resume.projects %}
+        {% if p.strip() %}
+          <li>{{ p.lstrip("•- ") }}</li>
+        {% endif %}
       {% endfor %}
     </ul>
   {% else %}
-    <p>No ATS feedback available.</p>
+    <p>No projects mentioned.</p>
   {% endif %}
 </div>
 
