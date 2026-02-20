@@ -178,7 +178,13 @@ def analyze_resume():
         flash("❌ Upload a resume first")
         return redirect("/candidate/dashboard")
 
-    parsed = parse_resume(resume["file_path"])
+    file_path = resume.get("file_path")
+
+    if not file_path or not os.path.exists(file_path):
+        flash("⚠ Resume file not found. Please upload again.")
+        return redirect("/candidate/dashboard")
+
+    parsed = parse_resume(file_path)
 
     personal_details = {
         "name": parsed.get("name"),
