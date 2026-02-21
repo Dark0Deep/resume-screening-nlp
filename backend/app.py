@@ -22,9 +22,11 @@ app = Flask(
 )
 app.secret_key = "supersecretkey"
 
-UPLOAD_FOLDER = "backend/uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+UPLOAD_FOLDER = "uploads"
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+upload_dir = os.path.join(app.root_path, UPLOAD_FOLDER)
+os.makedirs(upload_dir, exist_ok=True)
 
 # ======================================================
 # AUTH
