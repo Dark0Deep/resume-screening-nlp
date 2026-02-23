@@ -15,10 +15,12 @@ from backend.nlp.matcher import calculate_simple_ats
 from backend.db import users_collection, resumes_collection, jobs_collection, applications_collection
 
 # ================= APP =================
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
 app = Flask(
     __name__,
-    template_folder="../frontend/templates",
-    static_folder="../frontend/static"
+    template_folder=os.path.join(BASE_DIR, "frontend", "templates"),
+    static_folder=os.path.join(BASE_DIR, "frontend", "static")
 )
 app.secret_key = "supersecretkey"
 
